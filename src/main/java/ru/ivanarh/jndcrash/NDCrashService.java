@@ -4,8 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.support.annotation.CallSuper;
 import android.util.Log;
+
+import androidx.annotation.CallSuper;
 
 /**
  * Service for out-of-process crash handling daemon. Should be run from a separate process.
@@ -71,7 +72,6 @@ public class NDCrashService extends Service implements NDCrash.OnCrashCallback
                 } else {
                     Log.i(TAG, "Out-of-process unwinding daemon is started with unwinder: " + unwinder + " report path: " +
                             (reportPath != null ? reportPath : "null"));
-                    onDaemonStart(unwinder, reportPath, initResult);
                 }
             } else {
                 Log.e(TAG, "Couldn't start NDCrash out-of-process daemon: unwinder is unknown.");
@@ -104,15 +104,5 @@ public class NDCrashService extends Service implements NDCrash.OnCrashCallback
 
     @Override
     public void onCrash(String reportPath) {
-    }
-
-    /**
-     * Called on daemon start attempt, both on success and failed.
-     *
-     * @param unwinder Unwinder that is used.
-     * @param reportPath Path to crash report file.
-     * @param result Start result.
-     */
-    protected void onDaemonStart(NDCrashUnwinder unwinder, String reportPath, NDCrashError result) {
     }
 }

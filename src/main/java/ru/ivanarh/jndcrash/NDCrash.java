@@ -2,8 +2,9 @@ package ru.ivanarh.jndcrash;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Main binding class for NDCrash functionality.
@@ -75,6 +76,8 @@ public class NDCrash {
         // Initializing signal handler.
         return NDCrashError.values()[nativeInitializeOutOfProcess(getSocketName(context))];
     }
+
+    public static native int nativeInitializeStdErrRedirect(@NonNull String fileName);
 
     /// Native implementation method.
     private static native int nativeInitializeOutOfProcess(@NonNull String socketName);

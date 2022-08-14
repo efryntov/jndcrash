@@ -1,6 +1,8 @@
 #include <ndcrash.h>
 #include <jni.h>
 #include <malloc.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 // NDCrash.java methods
 
@@ -163,4 +165,23 @@ JNIEXPORT jboolean JNICALL Java_ru_ivanarh_jndcrash_NDCrash_nativeStopOutOfProce
 #else
     return (jboolean) false;
 #endif //ENABLE_OUTOFPROCESS
+}
+
+JNIEXPORT jint JNICALL
+Java_ru_ivanarh_jndcrash_NDCrash_nativeInitializeStdErrRedirect(JNIEnv *env, jclass clazz,
+                                                                jstring jRedirectFilename) {
+    const char *redirectFileName = NULL;
+    if (jRedirectFilename) {
+        redirectFileName = (*env)->GetStringUTFChars(env, jRedirectFilename, 0);
+    }
+    if (redirectFileName) {
+        (*env)->ReleaseStringUTFChars(env, jRedirectFilename, redirectFileName);
+    }
+
+    /* make stderr unbuffered */
+    setvbuf(stderr, 0, _IONBF, 0);
+
+    int fd = open(redirectFileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+
+    dup2(fd, STDERR_FILENO);
 }
